@@ -2,6 +2,8 @@ package com.tosan.customer.services;
 
 import java.util.regex.Pattern;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.tosan.customer.Exceptions.CustomerHasDepositException;
 import com.tosan.customer.Exceptions.NinIsExistsException;
 import com.tosan.customer.Exceptions.NinNotFoundException;
@@ -32,6 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private DepositResources depositResource;
 
+    @Transactional
     @Override
     public Customer create(Customer item) {
         if (validateNIN(item.getNin()) && isNinIdentical(item.getNin()))
@@ -42,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> getAllCustomerByFilter(SearchFilters filter) {
-        SearchFilters changedFilter = changeToJpql(filter);
+        SearchFilters changedFilter = changeToJPQL(filter);
         return repo.findAllCustomers(
                 changedFilter.getName(),
                 changedFilter.getFamily(),
@@ -71,6 +74,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public Customer changeCustomerState(Customer customer) {
         Optional<Customer> optionalCustomer = repo.findByNin(customer.getNin());
         Customer changedCustomer = optionalCustomer.orElseThrow(() -> new NinNotFoundException("Nin not Found"));
@@ -99,7 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
         return false;
     }
 
-    private SearchFilters changeToJpql(SearchFilters filter) {
+    private SearchFilters changeToJPQL(SearchFilters filter) {
 
         if (filter.getName() == null)
             filter.setName("%");
@@ -133,4 +137,5 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(() -> new NinNotFoundException("Nin not found or not valid"));
     }
 
+    
 }

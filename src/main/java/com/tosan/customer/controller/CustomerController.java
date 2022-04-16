@@ -67,5 +67,6 @@ public class CustomerController {
     public ResponseEntity<Customer> getCustomerByNin(@PathVariable @NotBlank() String nin) {
         return ResponseEntity.ok().body(service.getCustomerByNin(nin));
     }
+    
 
 }
