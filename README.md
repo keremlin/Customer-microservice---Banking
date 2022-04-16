@@ -3,7 +3,7 @@ There are Four microServices in this project:
   - [Customer](https://github.com/keremlin/Customer-microservice---Tosan-Banking) : This project is providing customer-related services such as Registration.
   - [Deposit](https://github.com/keremlin/Deposit-microservice---Tosan-Banking) : This project aims to handle deposit-related works.
   - [Transactions](https://github.com/keremlin/Transactions-microservice---Tosan-Banking) : All transactions that happened in other services will be save using this service.
-  - [Loans]() : The project creates Loans and binds them to other services.
+  - [Loans](https://github.com/keremlin/Loan-microservice---Tosan-Banking) : The project creates Loans and binds them to other services.
 ## Documents
 ### Compile and Run
 
@@ -16,9 +16,11 @@ java -jar customer.jar
 ```
 There is a Docker file in the root of the project, so you can build a container and just run it. The command is :
 ```bash
+docker build -t customer-service:latest --build-arg DATASOURCE2=$DATASOURCE2 --build-arg DBUNAME=$DBUNAME --build-arg  DBPASS=$DBPASS .
 ```
 And Run the Docker with connections string of the database and also provides related username and password of database, like this command:
 ```bash
+docker run --env DATASOURCE2='jdbc:mysql://10.8.15.131:3307/customer' --env DBUNAME=root --env DBPASS=root -p 8080:8080 customer-service
 ```
 Furthermore, there is a 'docker-compose.yml' at the project root. That bootstraps all modules that the project is needed, like Mysql, network, and the application. You should install Docker-composer. At the project root run these commands: 
 ```bash

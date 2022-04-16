@@ -6,11 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.tosan.customer.model.Customer;
 import com.tosan.customer.model.CustomerType;
 import com.tosan.customer.repositories.CustomerRepository;
-import com.tosan.customer.repositories.DepositResources;
 import com.tosan.customer.repositories.DepositResourcesImpl;
 import com.tosan.customer.services.CustomerServiceImpl;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -21,10 +19,8 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestTemplate;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,10 +28,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.tosan.customer.Exceptions.CustomerHasDepositException;
-import com.tosan.customer.Exceptions.NinIsExistsException;
 import com.tosan.customer.Exceptions.NinNotFoundException;
 import com.tosan.customer.dto.DepositDto;
-import com.tosan.customer.dto.SearchFilters;
 import com.tosan.customer.model.*;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -49,7 +43,7 @@ public class depositTests {
     CustomerRepository repo;
 
     @Mock
-    DepositResourcesImpl deppsitResources;
+    DepositResourcesImpl depositResources;
 
     @Mock
     RestTemplate restTemplate;
@@ -57,7 +51,7 @@ public class depositTests {
     Customer customer;
     Customer newCustomer;
     List<Customer> listCustomer = new ArrayList<>();
-    List<DepositDto> listDeposit=new ArrayList();
+    List<DepositDto> listDeposit=new ArrayList<>();
 
     // @BeforeAll 
     @BeforeEach 
@@ -132,10 +126,10 @@ listDeposit.clear();
         when(repo.findByNin("3234563434")).thenReturn(Optional.of(customer));
         when(repo.findByNin("3234563567")).thenReturn(Optional.of(listCustomer.get(1)));
         when(repo.findByNin("9234563430")).thenReturn(Optional.empty());
-        when(deppsitResources.getAllDepositsByNin("3234563434")).thenReturn(listDeposit);
-        when(deppsitResources.hasCustomerAnyDepositByNin("3234563434")).thenReturn(true);
-        when(deppsitResources.hasCustomerAnyDepositByNin("9234563430")).thenReturn(false);
-        when(deppsitResources.hasCustomerAnyDepositByNin("3234563567")).thenReturn(false);
+        when(depositResources.getAllDepositsByNin("3234563434")).thenReturn(listDeposit);
+        when(depositResources.hasCustomerAnyDepositByNin("3234563434")).thenReturn(true);
+        when(depositResources.hasCustomerAnyDepositByNin("9234563430")).thenReturn(false);
+        when(depositResources.hasCustomerAnyDepositByNin("3234563567")).thenReturn(false);
         Mockito.doNothing().when(repo).delete(customer);
     }
     @Test
@@ -149,7 +143,7 @@ listDeposit.clear();
     }
    
     @Test
-    void ckeckDeleteCustomerNotFoundException() {
+    void checkDeleteCustomerNotFoundException() {
         customer.setNin("9234563430");
         assertThrows(NinNotFoundException.class, () -> customerService.deleteCustomer(customer));
     }
